@@ -17,7 +17,7 @@ void AMovingPlatform::BeginPlay()
 	Super::BeginPlay();
 
 	InitialLocation = GetActorLocation();
-	MovementDirection.Normalize();
+	MovementDirection.GetSafeNormal();
 
 	TargetLocation = InitialLocation + MovementDistance * MovementDirection;
 }
@@ -39,7 +39,6 @@ void AMovingPlatform::Tick(float DeltaTime)
 	if (DistanceFromInitialLocation > MovementDistance)
 	{
 		MovementDirection *= -1;
-		SetActorLocation(TargetLocation);
 
 		// Swap initial and target locations since the platform is about to move in the opposite direction.
 		CurrentLocation = TargetLocation;
