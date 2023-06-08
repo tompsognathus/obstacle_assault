@@ -23,6 +23,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+private:
+	void MovePlatform(float DeltaTime);
+	void RotatePlatform(float DeltaTime);
+
 	// Movement direction for the platform. The vector will be normalized at launch, no need to do this manually.
 	UPROPERTY(EditAnywhere, Category="Moving Platform")
 	FVector MovementDirection = FVector(0, 1, 0);
@@ -32,7 +36,11 @@ public:
 
 	// How far the platform should travel before reversing direction.
 	UPROPERTY(EditAnywhere, Category = "Moving Platform")
-	float MovementDistance = -1.0;
+	float MovementDistance = 0.0;
+
+	// How fast the platform should rotate. To reverse the direction, simply use a negative speed.
+	UPROPERTY(EditAnywhere, Category = "Moving Platform")
+	float RotationSpeed = 0.0;
 
 	// Track how far the platform has travelled since last direction change.
 	FVector InitialLocation;
