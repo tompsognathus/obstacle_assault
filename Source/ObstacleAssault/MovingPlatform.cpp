@@ -27,30 +27,18 @@ void AMovingPlatform::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-
 	MovePlatform(DeltaTime);
 	RotatePlatform(DeltaTime);
 }
 
 void AMovingPlatform::MovePlatform(float DeltaTime)
 {
-	FVector CurrentLocation = GetActorLocation();
-
-	// Move the platform
-	SetActorLocation(CurrentLocation + MovementSpeed * DeltaTime * MovementDirection);
-
-	// Track how far the platform has travelled since last direction change.
-	float DistanceFromInitialLocation = FVector::Dist(CurrentLocation, InitialLocation);
+	Move(DeltaTime);
 
 	// Reverse movement direction once the platform has travelled the desired distance.
-	if (DistanceFromInitialLocation > MovementDistance)
+	if (ShouldReverseDirection())
 	{
-		MovementDirection *= -1;
-
-		// Swap initial and target locations since the platform is about to move in the opposite direction.
-		CurrentLocation = TargetLocation;
-		TargetLocation = InitialLocation;
-		InitialLocation = CurrentLocation;
+		ReverseDirection();
 	}
 }
 
@@ -61,4 +49,34 @@ void AMovingPlatform::RotatePlatform(float DeltaTime)
 	// Rotate the platform
 	SetActorRotation(CurrentRotation + FRotator(0, RotationSpeed * DeltaTime, 0));
 }
+
+void AMovingPlatform::Move(float DeltaTime)
+{
+	FVector CurrentLocation = GetActorLocation();
+	FVector NewLocation = CurrentLocation + MovementSpeed * DeltaTime * MovementDirection;
+	SetActorLocation(NewLocation);
+}
+
+void AMovingPlatform::ReverseDirection()
+{
+	SetActorLocation(TargetLocation);
+	MovementDirection *= -1;
+
+	// Swap initial and target locations since the platform is about to move in the opposite direction.
+	FVector CurrentLocation = TargetLocation;
+	TargetLocation = InitialLocation;
+	InitialLocation = CurrentLocation;
+}
+
+float AMovingPlatform::GetDistanceTravelled() const
+{
+	FVector CurrentLocation = GetActorLocation();
+	return FVector::Dist(CurrentLocation, InitialLocation);
+}
+
+bool AMovingPlatform::ShouldReverseDirection() const
+{
+	return GetDistanceTravelled() > MovementDistance;
+}
+
 
