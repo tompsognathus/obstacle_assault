@@ -24,11 +24,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
+	float GetDistanceTravelled() const;
+	void Move(float DeltaTime);
 	void MovePlatform(float DeltaTime);
 	void ReverseDirection();
 	void RotatePlatform(float DeltaTime);
-	void Move(float DeltaTime);
-	float GetDistanceTravelled() const;
 	bool ShouldReverseDirection() const;
 
 	// Movement direction for the platform. The vector will be normalized at launch, no need to do this manually.
